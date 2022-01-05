@@ -1,12 +1,15 @@
-import argparse
-import sys
 import torch
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def predict():
     print("Evaluating until hitting the ceiling")
+    DIR = os.getenv('DIRECTORY')
     
-    model = torch.load("/models/trained_model.pt")
-    test = torch.load("/data/processed/test.pt")
+    model = torch.load(f"{DIR}models/trained_model.pt")
+    test = torch.load(f"{DIR}data/processed/test.pt")
     test_set = torch.utils.data.DataLoader(test, batch_size=64, shuffle=True)
 
     with torch.no_grad():

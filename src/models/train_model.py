@@ -1,14 +1,16 @@
 import argparse
 import sys
-
-import matplotlib.pyplot as plt
-import seaborn as sns
+import os
+from dotenv import load_dotenv
 import torch
 from model import MyAwesomeModel
 from torch import nn, optim
 
+load_dotenv()
+
 
 def train():
+    DIR = os.getenv('DIRECTORY')
     print("Training day and night")
     parser = argparse.ArgumentParser(description="Training arguments")
     parser.add_argument("--lr", default=0.1)
@@ -18,7 +20,7 @@ def train():
 
     model = MyAwesomeModel()
 
-    train = torch.load("/data/processed/train.pt")
+    train = torch.load(f"{DIR}data/processed/train.pt")
     train_set = torch.utils.data.DataLoader(train, batch_size=64, shuffle=True)
     model.train()
 

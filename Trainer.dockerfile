@@ -18,6 +18,8 @@ COPY src/ src/
 
 RUN pip install -r requirements.txt --no-cache-dir
 
+ENV DIRECTORY="/"
+
 ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
 
 # CMD ["sh", "-c", "tail -f /dev/null"]

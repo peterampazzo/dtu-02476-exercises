@@ -5,8 +5,8 @@ import torch
 def predict():
     print("Evaluating until hitting the ceiling")
     
-    model = torch.load("models/trained_model.pt")
-    test = torch.load("data/processed/test.pt")
+    model = torch.load("/models/trained_model.pt")
+    test = torch.load("/data/processed/test.pt")
     test_set = torch.utils.data.DataLoader(test, batch_size=64, shuffle=True)
 
     with torch.no_grad():

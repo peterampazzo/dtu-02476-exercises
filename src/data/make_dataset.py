@@ -8,6 +8,7 @@ import torch
 from numpy import load
 import numpy as np
 from torch.utils.data import TensorDataset
+import torch.nn.functional as F
 
 
 def mnist(input_filepath, output_filepath):
@@ -17,12 +18,12 @@ def mnist(input_filepath, output_filepath):
     train_images = np.concatenate(([train[x]["images"] for x in range(len(train))]))
     train_labels = np.concatenate(([train[x]["labels"] for x in range(len(train))]))
 
-    train_images_tensor = torch.Tensor(train_images)
+    train_images_tensor = F.normalize(torch.Tensor(train_images))  # normalize
     train_labels_tensor = torch.Tensor(train_labels).type(torch.LongTensor)
 
     train = TensorDataset(train_images_tensor, train_labels_tensor)
 
-    test_images_tensor = torch.Tensor(test["images"])
+    test_images_tensor = F.normalize(torch.Tensor(test["images"]))
     test_labels_tensor = torch.Tensor(test["labels"]).type(torch.LongTensor)
 
     test = TensorDataset(test_images_tensor, test_labels_tensor)

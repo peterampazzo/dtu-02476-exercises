@@ -7,8 +7,6 @@ import torch
 from model import MyAwesomeModel
 from torch import nn, optim
 
-sns.set()
-
 
 def train():
     print("Training day and night")
@@ -19,9 +17,10 @@ def train():
     print(args)
 
     model = MyAwesomeModel()
-    model.train()
 
-    train_set = torch.load("data/processed/corruptmnist/train.pt")
+    train = torch.load("/data/processed/train.pt")
+    train_set = torch.utils.data.DataLoader(train, batch_size=64, shuffle=True)
+    model.train()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -32,6 +31,8 @@ def train():
     for e in range(epochs):
         running_loss = 0
         for images, labels in train_set:
+            images = images.view(images.shape[0], -1)
+
             optimizer.zero_grad()
             outputs = model(images)
 
@@ -44,17 +45,6 @@ def train():
 
         print(f"Epoch: {e} - Training loss: {running_loss/len(train_set):5f}")
         train_loss.append(running_loss / len(train_set))
-
-        plt.figure()
-        plt.title("Training Loss")
-        plt.xlabel("Epoch")
-        plt.xticks(range(1, epochs + 2))
-        plt.ylabel("Loss")
-        plt.plot(range(1, args.epochs + 1), train_loss)
-        plt.savefig("reports/figures/training.png")
-        plt.close()
-
-        torch.save(model.state_dict(), "models/mnist/model.pt")
 
 
 if __name__ == "__main__":

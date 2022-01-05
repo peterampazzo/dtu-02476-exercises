@@ -17,8 +17,8 @@ class MyAwesomeModel(nn.Module):
 
     def forward(self, x):
         # make sure input tensor is flattened
-        # x = x.view(x.shape[0], -1)
-        x = self.flatten(x)
+        x = x.view(x.shape[0], -1)
+        # x = self.flatten(x)
 
         x = self.dropout(F.relu(self.fc1(x)))
         x = self.dropout(F.relu(self.fc2(x)))

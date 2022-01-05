@@ -1,0 +1,3 @@
+params:
+  lr: 0.1
+  epochs: 2

@@ -1,23 +1,19 @@
-import argparse
-import sys
 import os
 from dotenv import load_dotenv
 import torch
 from model import MyAwesomeModel
 from torch import nn, optim
+import hydra
+from omegaconf import OmegaConf
 
 load_dotenv()
 
-
-def train():
+@hydra.main(config_path="config", config_name='default_config.yaml')
+def train(config):
+    print(f"configuration: \n {OmegaConf.to_yaml(config)}")
     DIR = os.getenv('DIRECTORY')
     print("Training day and night")
-    parser = argparse.ArgumentParser(description="Training arguments")
-    parser.add_argument("--lr", default=0.1)
-    # add any additional argument that you want
-    args = parser.parse_args(sys.argv[2:])
-    print(args)
-
+   
     model = MyAwesomeModel()
 
     train = torch.load(f"{DIR}data/processed/train.pt")
@@ -25,12 +21,11 @@ def train():
     model.train()
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.parameters(), lr=config.params.lr)
 
     train_loss = []
 
-    epochs = 2
-    for e in range(epochs):
+    for e in range(config.params.epochs):
         running_loss = 0
         for images, labels in train_set:
             images = images.view(images.shape[0], -1)

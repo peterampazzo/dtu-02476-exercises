@@ -11,10 +11,8 @@ from torch.utils.data import TensorDataset
 
 
 def mnist(input_filepath, output_filepath):
-    path = f"data/raw/{input_filepath}/"
-
-    train = [load(os.path.join(path, f"train_{x}.npz")) for x in range(0, 5)]
-    test = load(os.path.join(path, "test.npz"))
+    train = [load(os.path.join(input_filepath, f"train_{x}.npz")) for x in range(0, 5)]
+    test = load(os.path.join(input_filepath, "test.npz"))
 
     train_images = np.concatenate(([train[x]["images"] for x in range(len(train))]))
     train_labels = np.concatenate(([train[x]["labels"] for x in range(len(train))]))
@@ -22,17 +20,15 @@ def mnist(input_filepath, output_filepath):
     train_images_tensor = torch.Tensor(train_images)
     train_labels_tensor = torch.Tensor(train_labels).type(torch.LongTensor)
 
-    train_data = TensorDataset(train_images_tensor, train_labels_tensor)
-    train = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
+    train = TensorDataset(train_images_tensor, train_labels_tensor)
 
     test_images_tensor = torch.Tensor(test["images"])
     test_labels_tensor = torch.Tensor(test["labels"]).type(torch.LongTensor)
 
-    test_data = TensorDataset(test_images_tensor, test_labels_tensor)
-    test = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=True)
-
-    torch.save(train, f"data/processed{output_filepath}/train.pt")
-    torch.save(test, f"data/processed{output_filepath}/test.pt")
+    test = TensorDataset(test_images_tensor, test_labels_tensor)
+    
+    torch.save(train, f"{output_filepath}/train.pt")
+    torch.save(test, f"{output_filepath}/test.pt")
 
 
 @click.command()

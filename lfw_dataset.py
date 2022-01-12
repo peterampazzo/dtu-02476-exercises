@@ -11,6 +11,8 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
+from utils import show
+from torchvision.utils import make_grid
 
 class LFWDataset(Dataset):
     def __init__(self, path_to_folder: str, transform) -> None:
@@ -25,9 +27,8 @@ class LFWDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, index: int) -> torch.Tensor:
-        with Image.open(self.data[index]) as img:
-            img.show()
-        return self.transform(img)
+       img = Image.open(self.data[index])
+       return self.transform(img)
 
         
 if __name__ == '__main__':
@@ -58,8 +59,8 @@ if __name__ == '__main__':
     )
     
     if args.visualize_batch:
-        # TODO: visualize a batch of images
-        pass
+        grid = make_grid([dataset[0], dataset[1], dataset[2], dataset[4]])
+        show(grid)
         
     if args.get_timing:
         # lets do some repetitions

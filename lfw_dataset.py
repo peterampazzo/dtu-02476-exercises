@@ -4,6 +4,7 @@ LFW dataloading
 import argparse
 import time
 
+import os
 import numpy as np
 import torch
 from PIL import Image
@@ -13,22 +14,27 @@ from torchvision import transforms
 
 class LFWDataset(Dataset):
     def __init__(self, path_to_folder: str, transform) -> None:
-        # TODO: fill out with what you need
         self.transform = transform
+        self.data = []
+
+        for subdir, dirs, files in os.walk(path_to_folder):
+            for file in files:
+                self.data.append(os.path.join(subdir,file))
         
     def __len__(self):
-        return None # TODO: fill out
+        return len(self.data)
     
     def __getitem__(self, index: int) -> torch.Tensor:
-        # TODO: fill out
+        with Image.open(self.data[index]) as img:
+            img.show()
         return self.transform(img)
 
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-path_to_folder', default='', type=str)
+    parser.add_argument('-path_to_folder', default='data/lfw', type=str)
     parser.add_argument('-batch_size', default=512, type=int)
-    parser.add_argument('-num_workers', default=None, type=int)
+    parser.add_argument('-num_workers', default=1, type=int)
     parser.add_argument('-visualize_batch', action='store_true')
     parser.add_argument('-get_timing', action='store_true')
     parser.add_argument('-batches_to_check', default=100, type=int)
